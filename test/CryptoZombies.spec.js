@@ -1,6 +1,5 @@
-const CryptoZombies = artifacts.require("ZombieOwnsership");
+const CryptoZombies = artifacts.require("ZombieOwnership");
 const utils = require("./helpers/utils");
-const time = require("./helpers/time");
 var expect = require('chai').expect;
 const zombieNames = ["Zombie 1", "Zombie 2"];
 contract("CryptoZombies", (accounts) => {
@@ -45,14 +44,12 @@ contract("CryptoZombies", (accounts) => {
             expect(newOwner).to.equal(bob);
          })
     })
-    it("zombies should be able to attack another zombie", async () => {
+    it("zombies cannot attack another zombie immediately", async () => {
         let result;
         result = await contractInstance.createRandomZombie(zombieNames[0], {from: alice});
         const firstZombieId = result.logs[0].args.zombieId.toNumber();
         result = await contractInstance.createRandomZombie(zombieNames[1], {from: bob});
         const secondZombieId = result.logs[0].args.zombieId.toNumber();
-        await time.increase(time.duration.days(1));
-        await contractInstance.attack(firstZombieId, secondZombieId, {from: alice});
-        expect(result.receipt.status).to.equal(true);
+        await utils.shouldThrow(contractInstance.attack(firstZombieId, secondZombieId, {from: alice}))
     })
 })
