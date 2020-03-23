@@ -1,0 +1,30 @@
+{
+  "name": "cryptozombies",
+  "version": "0.0.1",
+  "description": "Crypto game on ethereum",
+  "main": "truffle-config.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "chai": "^4.2.0"
+  },
+  "scripts": {
+    "test": "truffle test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Draichi/cryptozombies.git"
+  },
+  "keywords": [
+    "ethereum",
+    "erc721"
+  ],
+  "author": "@draichi",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Draichi/cryptozombies/issues"
+  },
+  "homepage": "https://github.com/Draichi/cryptozombies#readme"
+}
