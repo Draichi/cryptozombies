@@ -15,15 +15,39 @@
       var cryptoZombies;
       var userAccount;
 
+      window.addEventListener('load', function() {
+
+        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
+        if (typeof web3 !== 'undefined') {
+          // Use Mist/MetaMask's provider
+          // web3js = new Web3(web3.currentProvider);
+          web3 = new Web3(web3.currentProvider);
+          console.log('vc tem provider')
+        } else {
+          // Handle the case where the user doesn't have Metamask installed
+          console.log('vc nao tem provider')
+          const provider = new Web3.providers.HttpProvider("https://ropsten.infura.io/v3/cbf946aba73046d8ab55e4575a60da04");
+          web3 = new Web3(provider);
+          // Probably show them a message prompting them to install Metamask
+        }
+
+        // Now you can start your app & access web3 freely:
+        startApp()
+
+      })
+
       function startApp() {
         var cryptoZombiesAddress = "0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7";
-        var web3 = new Web3(new Web3.providers.HttpProvider(
-            'https://ropsten.infura.io/v3/cbf946aba73046d8ab55e4575a60da04'
-        ));
-        // var web3 = new Web3(web3.currentProvider)
+
+        web3.eth.net.isListening()
+          .then(() => console.log('web3 is connected'))
+          .catch(e => console.log('Wow. Something went wrong'));
         cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
-        console.log(cryptoZombies)
-        console.log(web3.eth.accounts[0])
+        
+        accounts = web3.eth.accounts.create()
+        userAccount = accounts.address
+        console.log(userAccount)
+        createRandomZombie('lucas')
 
         var accountInterval = setInterval(function() {
           // Check if account has changed
@@ -122,23 +146,6 @@
         return cryptoZombies.methods.getZombiesByOwner(owner).call()
       }
 
-      window.addEventListener('load', function() {
-
-        // Checking if Web3 has been injected by the browser (Mist/MetaMask)
-        if (typeof web3 !== 'undefined') {
-          // Use Mist/MetaMask's provider
-          // web3js = new Web3(web3.currentProvider);
-          console.log('vc tem provider')
-        } else {
-          // Handle the case where the user doesn't have Metamask installed
-          console.log('vc nao tem provider')
-          // Probably show them a message prompting them to install Metamask
-        }
-
-        // Now you can start your app & access web3 freely:
-        startApp()
-
-      })
     </script>
   </body>
 </html>
