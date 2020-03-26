@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <title>CryptoZombies front-end</title>
     <script language="javascript" type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.34/dist/web3.min.js"></script>
+    <script language="javascript" type="text/javascript" src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.37/dist/web3.min.js"></script>
     <script language="javascript" type="text/javascript" src="cryptozombies_abi.js"></script>
   </head>
   <body>
@@ -22,6 +22,7 @@
           // Use Mist/MetaMask's provider
           // web3js = new Web3(web3.currentProvider);
           web3 = new Web3(web3.currentProvider);
+          ethereum.enable()
           console.log('vc tem provider')
         } else {
           // Handle the case where the user doesn't have Metamask installed
@@ -36,7 +37,7 @@
 
       })
 
-      function startApp() {
+      async function startApp() {
         var cryptoZombiesAddress = "0x18fcb305819C3Bb938226cA19519cD4fa1cf6EF7";
 
         web3.eth.net.isListening()
@@ -44,20 +45,25 @@
           .catch(e => console.log('Wow. Something went wrong'));
         cryptoZombies = new web3.eth.Contract(cryptoZombiesABI, cryptoZombiesAddress);
         
-        accounts = web3.eth.accounts.create()
-        userAccount = accounts.address
-        console.log(userAccount)
-        createRandomZombie('lucas')
+        // accounts = web3.eth.accounts.create()
+        // accounts = web3.eth.accounts.currentProvider
+        // console.log(accounts.selectedAddress)
+        // userAccount = accounts.selectedAddress
+        // console.log(userAccount)
+        // userAccount = '0x60215911b9Cdcc25834eFa09026d05a7A95a8E42'
+        // createRandomZombie('lucas')
+
+        // console.log(await getZombiesByOwner(userAccount));
 
         var accountInterval = setInterval(function() {
           // Check if account has changed
-          if (web3.eth.accounts[0] !== userAccount) {
-            userAccount = web3.eth.accounts[0];
+          if (web3.eth.accounts.currentProvider.selectedAddress !== userAccount) {
+            userAccount = web3.eth.currentProvider.selectedAddress;
             // Call a function to update the UI with the new account
             getZombiesByOwner(userAccount)
             .then(displayZombies);
           }
-        }, 100);
+        }, 1000);
 
         // Use `filter` to only fire this code when `_to` equals `userAccount`
           cryptoZombies.events.Transfer({ filter: { _to: userAccount } })
